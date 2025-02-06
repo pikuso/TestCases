@@ -23,10 +23,13 @@ Before you begin, ensure that you have the following installed:
    ```bash
    git clone https://github.com/pikuso/TestCases.git
 2. Install the necessary dependencies:
+   ```bash
    npm install
 
 ## Running the Tests
 1. To run all the tests defined in the specs/ folder, use the following command:
+   ```bash
    npx wdio run wdio.conf.js
-2. To run a specific test file, specify the path to the test file:
+3. To run a specific test file, specify the path to the test file:
+   ```bash
    npx wdio run wdio.conf.js --spec path/to/test-file.js

@@ -4,7 +4,7 @@ exports.config = {
     exclude: [],
     maxInstances: 10,
     capabilities: [{
-        browserName: 'chrome' 
+        browserName: 'firefox' 
     }],
     logLevel: 'info',
     bail: 0,

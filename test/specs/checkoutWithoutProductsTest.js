@@ -2,6 +2,9 @@ const loginPage = require('../pageobjects/login.page');
 const cartPage = require('../pageobjects/cart.page');
 const checkoutPage = require('../pageobjects/checkout.page');
 
+/*  This test is expected to fail because when clicking the "Checkout" button with an empty cart,  
+    no error message is displayed indicating that the cart is empty.
+*/
 describe('Sauce Demo Empty Cart Checkout Test', () => {
     before(async () => {
         await loginPage.open();

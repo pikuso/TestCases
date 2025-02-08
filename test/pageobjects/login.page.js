@@ -1,45 +1,45 @@
-const Page = require('./page');
+const Page = require("./page");
 
 class LoginPage extends Page {
-    get inputUsername() {
-        return $('[data-test="username"]');
-    }
+  get inputUsername() {
+    return $('[data-test="username"]');
+  }
 
-    get inputPassword() {
-        return $('[data-test="password"]');
-    }
+  get inputPassword() {
+    return $('[data-test="password"]');
+  }
 
-    get btnSubmit() {
-        return $('[data-test="login-button"]');
-    }
+  get btnSubmit() {
+    return $('[data-test="login-button"]');
+  }
 
-    get errorMessage() {
-        return $('[data-test="error"]');  
-    }
+  get errorMessage() {
+    return $('[data-test="error"]');
+  }
 
-    get errorIconUsername() {
-        return $('[data-test="username"] ~ .error_icon'); 
-    }
-    
-    get errorIconPassword() {
-        return $('[data-test="password"] ~ .error_icon'); 
-    }
+  get errorIconUsername() {
+    return $('[data-test="username"] ~ .error_icon');
+  }
 
-    async login(username, password) {
-        await this.inputUsername.setValue(username);
-        await this.inputPassword.setValue(password);
-        await this.btnSubmit.click();
-    } 
+  get errorIconPassword() {
+    return $('[data-test="password"] ~ .error_icon');
+  }
 
-    async loginWithDefaultCredentials() {
-        const defaultUsername = 'standard_user';
-        const defaultPassword = 'secret_sauce';
-        await this.login(defaultUsername, defaultPassword);
-    }
+  async login(username, password) {
+    await this.inputUsername.setValue(username);
+    await this.inputPassword.setValue(password);
+    await this.btnSubmit.click();
+  }
 
-    open() {
-        return super.open('');  
-    }
+  async loginWithDefaultCredentials() {
+    const defaultUsername = "standard_user";
+    const defaultPassword = "secret_sauce";
+    await this.login(defaultUsername, defaultPassword);
+  }
+
+  open() {
+    return super.open("");
+  }
 }
 
 module.exports = new LoginPage();

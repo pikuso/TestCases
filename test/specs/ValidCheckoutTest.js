@@ -29,11 +29,15 @@ describe("Sauce Demo Logout Test", () => {
     expect(productsOnOverview).toEqual(addedProducts);
 
     const totalPrice = await checkoutPage.getTotalPrice();
-    const expectedTotal = addedProducts.reduce((sum, item) => sum + parseFloat(item.price.replace("$", "")), 0);
+    const expectedTotal = addedProducts.reduce(
+      (sum, item) => sum + parseFloat(item.price.replace("$", "")),
+      0
+    );
     expect(totalPrice).toBe(expectedTotal);
 
     await checkoutPage.completePurchase();
-    const isThankYouMessageDisplayed = await checkoutPage.isThankYouMessageDisplayed();
+    const isThankYouMessageDisplayed =
+      await checkoutPage.isThankYouMessageDisplayed();
     expect(isThankYouMessageDisplayed).toBe(true);
 
     await checkoutPage.backHome();

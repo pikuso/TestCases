@@ -21,6 +21,10 @@ class CartPage extends Page {
         return $$('.cart_item');  
     }
 
+    get totalPriceLabel() {
+        return $('[data-test="total-label"]'); 
+    }
+
     async openCart() {
         await this.cartIcon.click();
     }
@@ -30,44 +34,39 @@ class CartPage extends Page {
         expect(items.length).toBe(expectedCount);
     }
 
-    async verifyCartItemIsDisplayed(productName) {
-        const items = await $$('.cart_item [data-test="inventory-item-name"]');
-        for (let item of items) {
-            const itemName = await item.getText();
-            if (itemName === productName) {
-                return;
-            }
-        }
-        throw new Error(`Product "${productName}" not found in cart`);
-    }
-
     async proceedToCheckout() {
         await this.checkoutButton.click();  
     }
 
     async isCartEmpty() {
-        const items = await this.cartItems;  
+        const items = await this.cartItems;
         return items.length === 0;
     }
-
-    async verifyCartItem(productName) {
-        const items = await $$('.cart_item');
-    
-        if (items.length === 0) {
-            throw new Error("No items found in cart");
-        }
-    
-        for (let item of items) {
-            const itemName = await item.$('.inventory_item_name').getText();
-            if (itemName === productName) {
-                return;
-            }
-        }
-    
-        throw new Error(`Product "${productName}" not found in cart`);
-    }
-    
-    
 }
+
+    // async verifyCartItem(productName) {
+    //     const items = await this.cartItems;
+    
+    //     if (items.length === 0) {
+    //         throw new Error("No items found in cart");
+    //     }
+    
+    //     for (let item of items) {
+    //         const itemName = await item.$('.inventory_item_name').getText();
+    //         if (itemName === productName) {
+    //             return;
+    //         }
+    //     }
+    
+    //     throw new Error(`Product "${productName}" not found in cart`);
+    // }
+
+    // async verifyTotalPrice() {
+    //     const totalPrice = await this.calculateTotalPrice(); 
+    //     const totalPriceText = await this.totalPriceLabel.getText();
+    //     const totalPriceOnPage = parseFloat(totalPriceText.replace('$', '').trim()); 
+
+    //     expect(totalPrice).toBeCloseTo(totalPriceOnPage, 2); 
+    // }
 
 module.exports = new CartPage();

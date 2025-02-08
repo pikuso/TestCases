@@ -23,40 +23,15 @@ class CheckoutPage {
         return $$('.inventory_item_name');  
     }
 
-    get overviewProduct() {
-        return $('.inventory_item_name');
+    get TotalPrice() {
+        return $('[data-test="total-label"]');
     }
 
-    get overviewPrice() {
-        return $('.summary_subtotal_label');
-    }
-
-    async fillCheckoutForm(firstName, lastName, postalCode) {
+    async fillCheckoutForm(firstName = 'John', lastName = 'Doe', postalCode = '12345') {
         await this.firstNameInput.setValue(firstName);
         await this.lastNameInput.setValue(lastName);
         await this.postalCodeInput.setValue(postalCode);
         await this.continueButton.click();
-    }
-
-    async verifyCheckoutDetails(productName, productPrice) {
-        const items = await this.inventoryItems;
-
-        let productFound = false;
-        for (let item of items) {
-            const itemName = await item.getText();
-            if (itemName.includes(productName)) {
-                productFound = true;
-                break;  
-            }
-        }
-
-        if (!productFound) {
-            throw new Error(`Product with name "${productName}" was not found in checkout details.`);
-        }
-
-        const priceElement = await $( `.summary_subtotal_label` );
-        const priceText = await priceElement.getText();
-        expect(priceText).toContain(productPrice);  
     }
 
     async completePurchase() {
@@ -67,6 +42,18 @@ class CheckoutPage {
         const backHomeButton = await $('[data-test="back-to-products"]');
         await backHomeButton.click();
     }
+    // async verifyCheckoutDetails(productPrice) {
+    //     // Получаем общую цену из корзины
+    //     const totalPriceElement = await this.totalPriceLabel;
+    //     const totalPriceText = await totalPriceElement.getText();
+    
+    //     // Форматируем цену продукта и проверяем, совпадает ли она с общей ценой
+    //     const expectedTotalPrice = `$${productPrice.toFixed(2)}`;
+    
+    //     if (totalPriceText !== expectedTotalPrice) {
+    //         throw new Error(`Expected total price "${expectedTotalPrice}" but found "${totalPriceText}"`);
+    //     }
+    // }
 }
 
 module.exports = new CheckoutPage();

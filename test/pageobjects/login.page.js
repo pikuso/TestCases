@@ -24,11 +24,17 @@ class LoginPage extends Page {
     get errorIconPassword() {
         return $('[data-test="password"] ~ .error_icon'); 
     }
-    
+
     async login(username, password) {
         await this.inputUsername.setValue(username);
         await this.inputPassword.setValue(password);
         await this.btnSubmit.click();
+    } 
+
+    async loginWithDefaultCredentials() {
+        const defaultUsername = 'standard_user';
+        const defaultPassword = 'secret_sauce';
+        await this.login(defaultUsername, defaultPassword);
     }
 
     open() {

@@ -1,10 +1,11 @@
+//007
 const loginPage = require('../pageobjects/login.page');
 const footerPage = require('../pageobjects/footer.page');
 
 describe('Sauce Demo Footer Links Test', () => {
     before(async () => {
         await loginPage.open();
-        await loginPage.login('standard_user', 'secret_sauce');
+        await loginPage.loginWithDefaultCredentials();
         await expect(await browser.getUrl()).toContain('/inventory.html');
     });
 

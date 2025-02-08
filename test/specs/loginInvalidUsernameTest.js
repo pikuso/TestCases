@@ -1,10 +1,10 @@
+//003
 const loginPage = require('../pageobjects/login.page');
 
 describe('Sauce Demo Login Test - Invalid Username', () => {
     it('should fail to login with an invalid username and show error indicators', async () => {
         await loginPage.open();
-
-        await loginPage.login('invalid_user', 'secret_sauce'); 
+        await loginPage.login('stanarD_user', 'secret_sauce');
         
         expect(await loginPage.errorMessage.isDisplayed()).toBeTruthy();
         

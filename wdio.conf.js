@@ -2,7 +2,7 @@ exports.config = {
     runner: 'local',
     specs: ['./test/specs/**/*.js'],
     exclude: [],
-    maxInstances: 10,
+    maxInstances: 2,
     capabilities: [{
         browserName: 'firefox' 
     }],

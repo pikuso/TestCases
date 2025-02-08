@@ -27,7 +27,7 @@ class FooterPage {
                 return url.includes("facebook.com") || url.includes("linkedin.com") || url.includes("x.com");
             }, {
                 timeout: 10000, 
-                timeoutMsg: 'Страница не загрузилась в течение 10 секунд'
+                timeoutMsg: 'The page did not load within 10 seconds'
             });
 
             const currentUrl = await browser.getUrl();

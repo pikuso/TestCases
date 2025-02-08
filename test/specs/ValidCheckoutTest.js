@@ -1,7 +1,6 @@
 //008
 const loginPage = require("../pageobjects/login.page");
 const inventoryPage = require("../pageobjects/inventory.page");
-const inventoryPage = require("../pageobjects/cart.page");
 const cartPage = require("../pageobjects/cart.page");
 const checkoutPage = require("../pageobjects/checkout.page");
 
@@ -18,20 +17,27 @@ describe("Sauce Demo Logout Test", () => {
     expect(cartItemCount).toBe(1);
 
     await cartPage.openCart();
-    await cartPage.verifyCartContents(); 
+    const addedProducts = await cartPage.getProductsAndPrices();
+
     await cartPage.proceedToCheckout();
 
     const isFormVisible = await checkoutPage.isCheckoutFormDisplayed();
     expect(isFormVisible).toBe(true);
 
     await checkoutPage.fillCheckoutForm();
-    //Products from step 1 is displayed. Total price = price of products from step 1
+    const productsOnOverview = await checkoutPage.getProductsAndPrices();
+    expect(productsOnOverview).toEqual(addedProducts);
+
+    const totalPrice = await checkoutPage.getTotalPrice();
+    const expectedTotal = addedProducts.reduce((sum, item) => sum + parseFloat(item.price.replace("$", "")), 0);
+    expect(totalPrice).toBe(expectedTotal);
 
     await checkoutPage.completePurchase();
-    //User is redirected to the "Checkout Complete" page, "Thank you for your order!" message are displayed
+    const isThankYouMessageDisplayed = await checkoutPage.isThankYouMessageDisplayed();
+    expect(isThankYouMessageDisplayed).toBe(true);
 
     await checkoutPage.backHome();
-    //User is redirected to the inventory page. Products are displayed. Cart is empty
+    const isCartEmpty = await cartPage.isCartEmpty();
     await cartPage.isCartEmpty();
   });
 });

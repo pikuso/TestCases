@@ -23,9 +23,37 @@ class CheckoutPage {
         return $$('.inventory_item_name');  
     }
 
+    get productPrices(){
+        return $$('[data-test="inventory-item-price"]')
+    }
+
     get TotalPrice() {
         return $('[data-test="total-label"]');
     }
+
+    get thankYouMessage() {
+        return $('[data-test="complete-header"]');  
+    }
+       
+    async getProductsAndPrices() {
+        const products = [];
+        const inventoryItems = await $$('.inventory_item_name');
+        const productPrices = await $$('.inventory_item_price');
+    
+        for (let i = 0; i < inventoryItems.length; i++) {
+            const name = await inventoryItems[i].getText();
+            const price = await productPrices[i].getText();
+            products.push({ name, price });
+        }
+    
+        return products;
+    }
+    
+    async getTotalPrice() {
+        const totalPriceText = await $('[data-test="total-label"]').getText();
+        return parseFloat(totalPriceText.replace('Total: $', '').trim());
+    }
+    
 
      async isCheckoutFormDisplayed() {
         const isFirstNameVisible = await this.firstNameInput.isDisplayed();
@@ -45,6 +73,14 @@ class CheckoutPage {
 
     async completePurchase() {
         await this.finishButton.click();
+    }
+
+    async isThankYouMessageDisplayed() {
+        try {
+            return await this.thankYouMessage.isDisplayed();
+        } catch (error) {
+            return false;
+        }
     }
 
     async backHome() {

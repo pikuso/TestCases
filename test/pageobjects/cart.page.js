@@ -40,7 +40,7 @@ class CartPage extends Page {
             return false;
         }
         const firstItemName = await items[0].$(".inventory_item_name").getText();
-        return firstItemName === expectedProduct.name;
+        return firstItemName === expectedProduct;
     }
 
     async proceedToCheckout() {
@@ -51,7 +51,24 @@ class CartPage extends Page {
         const items = await this.cartItems;
         return items.length === 0;
     }
+
+    async getProductsAndPrices() {
+        const products = [];
+        const inventoryItems = await $$('.inventory_item_name');
+        const productPrices = await $$('.inventory_item_price');
+    
+        for (let i = 0; i < inventoryItems.length; i++) {
+            const name = await inventoryItems[i].getText();
+            const price = await productPrices[i].getText();
+            products.push({ name, price });
+        }
+    
+        return products;
+    }
+    
+    
 }
+
 
     // async verifyCartItem(productName) {
     //     const items = await this.cartItems;

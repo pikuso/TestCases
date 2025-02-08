@@ -27,6 +27,15 @@ class CheckoutPage {
         return $('[data-test="total-label"]');
     }
 
+     async isCheckoutFormDisplayed() {
+        const isFirstNameVisible = await this.firstNameInput.isDisplayed();
+        const isLastNameVisible = await this.lastNameInput.isDisplayed();
+        const isPostalCodeVisible = await this.postalCodeInput.isDisplayed();
+        const isContinueButtonVisible = await this.continueButton.isDisplayed();
+
+        return isFirstNameVisible && isLastNameVisible && isPostalCodeVisible && isContinueButtonVisible;
+    }
+
     async fillCheckoutForm(firstName = 'John', lastName = 'Doe', postalCode = '12345') {
         await this.firstNameInput.setValue(firstName);
         await this.lastNameInput.setValue(lastName);

@@ -34,6 +34,15 @@ class CartPage extends Page {
         expect(items.length).toBe(expectedCount);
     }
 
+    async verifyCartContents(expectedProduct) {
+        const items = await this.cartItems;
+        if (items.length === 0) {
+            return false;
+        }
+        const firstItemName = await items[0].$(".inventory_item_name").getText();
+        return firstItemName === expectedProduct.name;
+    }
+
     async proceedToCheckout() {
         await this.checkoutButton.click();  
     }

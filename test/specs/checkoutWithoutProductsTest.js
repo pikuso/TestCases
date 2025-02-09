@@ -7,12 +7,11 @@ const checkoutPage = require("../pageobjects/checkout.page");
     no error message is displayed indicating that the cart is empty.
 */
 describe("Sauce Demo Empty Cart Checkout Test", () => {
-  before(async () => {
-    await loginPage.open();
-    await loginPage.login("standard_user", "secret_sauce");
-  });
 
   it("should verify empty cart and checkout process", async () => {
+    await loginPage.open();
+    await loginPage.login();
+
     await cartPage.openCart();
 
     const isEmpty = await cartPage.isCartEmpty();

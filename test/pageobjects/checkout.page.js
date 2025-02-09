@@ -35,38 +35,33 @@ class CheckoutPage {
     return $('[data-test="complete-header"]');
   }
 
-  async getProductsAndPrices() {
-    const products = [];
-    const inventoryItems = await $$(".inventory_item_name");
-    const productPrices = await $$(".inventory_item_price");
+  get getCheckForm() {
+    return $(".checkout_info");
+  } 
 
-    for (let i = 0; i < inventoryItems.length; i++) {
-      const name = await inventoryItems[i].getText();
-      const price = await productPrices[i].getText();
-      products.push({ name, price });
+  async verifyProductInOverview(productName) {
+    const cartItemText = await (await $('.cart_item .inventory_item_name')).getText();
+    if (cartItemText !== productName) {
+        throw new Error(`Expected "${productName}", found "${cartItemText}"`);
     }
 
-    return products;
+    const overviewItemText = await (await $('.cart_item .inventory_item_name')).getText();
+    if (overviewItemText !== productName) {
+        throw new Error(`Expected "${productName}" in Overview, found "${overviewItemText}"`);
+    }
+}
+
+async getTotalPriceFromOverview() {
+  const priceElements = await $$('.inventory_item_price'); 
+  let total = 0;
+
+  for (let priceElement of priceElements) {
+      const priceText = await priceElement.getText();
+      total += parseFloat(priceText.replace("$", "").trim());
   }
 
-  async getTotalPrice() {
-    const totalPriceText = await this.TotalPrice.getText();
-    return parseFloat(totalPriceText.replace("Item total: $", "").trim());
-  }
-
-  async isCheckoutFormDisplayed() {
-    const isFirstNameVisible = await this.firstNameInput.isDisplayed();
-    const isLastNameVisible = await this.lastNameInput.isDisplayed();
-    const isPostalCodeVisible = await this.postalCodeInput.isDisplayed();
-    const isContinueButtonVisible = await this.continueButton.isDisplayed();
-
-    return (
-      isFirstNameVisible &&
-      isLastNameVisible &&
-      isPostalCodeVisible &&
-      isContinueButtonVisible
-    );
-  }
+  return total;
+}
 
   async fillCheckoutForm(
     firstName = "John",

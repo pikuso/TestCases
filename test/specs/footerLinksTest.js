@@ -5,7 +5,7 @@ const footerPage = require("../pageobjects/footer.page");
 describe("Sauce Demo Footer Links Test", () => {
   before(async () => {
     await loginPage.open();
-    await loginPage.loginWithDefaultCredentials();
+    await loginPage.login();
     await expect(await browser.getUrl()).toContain("/inventory.html");
   });
 

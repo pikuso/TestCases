@@ -1,6 +1,11 @@
 const Page = require("./page");
 
 class LoginPage extends Page {
+  
+  get loginForm() {
+    return $(".login_container");
+  }
+
   get inputUsername() {
     return $('[data-test="username"]');
   }
@@ -25,16 +30,10 @@ class LoginPage extends Page {
     return $('[data-test="password"] ~ .error_icon');
   }
 
-  async login(username, password) {
+  async login(username = "standard_user", password = "secret_sauce") {
     await this.inputUsername.setValue(username);
     await this.inputPassword.setValue(password);
     await this.btnSubmit.click();
-  }
-
-  async loginWithDefaultCredentials() {
-    const defaultUsername = "standard_user";
-    const defaultPassword = "secret_sauce";
-    await this.login(defaultUsername, defaultPassword);
   }
 
   open() {

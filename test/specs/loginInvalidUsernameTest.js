@@ -6,13 +6,11 @@ describe("Sauce Demo Login Test - Invalid Username", () => {
     await loginPage.open();
     await loginPage.login("stanarD_user", "secret_sauce");
 
-    expect(await loginPage.errorMessage.isDisplayed()).toBeTruthy();
+    expect(await loginPage.errorIconUsername.isDisplayed()).toBeTruthy();
+    expect(await loginPage.errorIconPassword.isDisplayed()).toBeTruthy();
 
     expect(await loginPage.errorMessage.getText()).toContain(
       "Epic sadface: Username and password do not match any user in this service"
     );
-
-    expect(await loginPage.errorIconUsername.isDisplayed()).toBeTruthy();
-    expect(await loginPage.errorIconPassword.isDisplayed()).toBeTruthy();
   });
 });

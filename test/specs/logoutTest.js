@@ -5,10 +5,9 @@ const inventoryPage = require("../pageobjects/inventory.page");
 describe("Sauce Demo Logout Test", () => {
   it("should logout successfully and redirect to login page", async () => {
     await loginPage.open();
-    await loginPage.loginWithDefaultCredentials();
+    await loginPage.login();
 
-    const currentUrl = await browser.getUrl();
-    expect(currentUrl).toContain("inventory.html");
+    expect(await browser.getUrl()).toContain("inventory.html");
 
     await inventoryPage.burgerMenu.click();
     const menuItems = await inventoryPage.menuItems;
@@ -16,8 +15,7 @@ describe("Sauce Demo Logout Test", () => {
 
     await inventoryPage.logout();
 
-    const newUrl = await browser.getUrl();
-    expect(newUrl).toContain("saucedemo.com");
+    expect(await loginPage.loginForm.isDisplayed()).toBeTruthy();
 
     expect(await loginPage.inputUsername.getValue()).toBe("");
     expect(await loginPage.inputPassword.getValue()).toBe("");

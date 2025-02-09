@@ -1,6 +1,10 @@
 const Page = require("./page");
 
 class InventoryPage extends Page {
+  get inventoryItems() {
+    return $$('[data-test="inventory-item"]');
+  }
+
   get burgerMenu() {
     return $("#react-burger-menu-btn");
   }
@@ -33,8 +37,23 @@ class InventoryPage extends Page {
 
   get sortDropdown() {
     const dropdown = $('[data-test="product-sort-container"]');
-    console.log("Sort Dropdown:", dropdown);
     return dropdown;
+  }
+
+  async selectSortOption(option) {
+    await this.sortDropdown.waitForDisplayed();
+    await this.sortDropdown.selectByVisibleText(option);
+  }
+
+  async getPrices() {
+    const priceElements = await this.productPrices;
+    if (priceElements.length === 0) {
+      throw new Error("No price elements found!");
+    }
+    return Promise.all(priceElements.map(async (el) => {
+      const text = await el.getText();
+      return parseFloat(text.replace('$', '').trim());
+    }));
   }
 
   async logout() {
@@ -47,12 +66,12 @@ class InventoryPage extends Page {
     await this.logoutButton.click();
   }
 
-  async addToCart() {
-    const firstProductButton = await this.addToCartButtons[0];
-    await firstProductButton.click();
-
-    const cartCount = await this.getCartItemCount();
-    console.log("Cart item count:", cartCount);
+  async addToCart(productName) {
+    const product = productName.toLowerCase().replace(/ /g, '-');
+    const productId = `add-to-cart-${product}`;
+    const productButton = await $(`button[data-test="${productId}"]`);
+    
+    await productButton.click();
   }
 
   async sortProducts(criteria) {
@@ -61,6 +80,9 @@ class InventoryPage extends Page {
   }
 
   async getCartItemCount() {
+    if(!await this.shoppingCartBadge.isDisplayed()){
+      return 0;
+    }
     const badgeText = await this.shoppingCartBadge.getText();
     console.log("Shopping cart badge text:", badgeText);
     return parseInt(badgeText, 10) || 0;

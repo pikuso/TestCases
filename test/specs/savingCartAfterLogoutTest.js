@@ -6,10 +6,14 @@ const cartPage = require("../pageobjects/cart.page");
 describe("Sauce Demo Cart Persistence Test", () => {
   it("should maintain products in cart after logout and login", async () => {
     await loginPage.open();
-    await loginPage.loginWithDefaultCredentials();
+    await loginPage.login();
     expect(await browser.getUrl()).toContain("inventory.html");
 
-    await inventoryPage.addToCart();
+    const cartCountBefore = await inventoryPage.getCartItemCount();
+    expect(cartCountBefore).toBe(0);
+    await inventoryPage.addToCart('Sauce Labs Bike Light');
+    const cartCountAfter = await inventoryPage.getCartItemCount();
+    expect(cartCountAfter).toBe(1);
 
     await inventoryPage.burgerMenu.click();
     const menuItems = await inventoryPage.menuItems;
@@ -19,10 +23,9 @@ describe("Sauce Demo Cart Persistence Test", () => {
     expect(await loginPage.inputUsername.getValue()).toBe("");
     expect(await loginPage.inputPassword.getValue()).toBe("");
 
-    await loginPage.loginWithDefaultCredentials();
+    await loginPage.login();
 
     const cartItemCountAfterLogin = await inventoryPage.getCartItemCount();
-    console.log("Cart item count after login:", cartItemCountAfterLogin);
     expect(cartItemCountAfterLogin).toBe(1);
   });
 });

@@ -92,6 +92,18 @@ class InventoryPage extends Page {
     const firstProductNameElement = await $$(".inventory_item_name");
     return firstProductNameElement.getText();
   }
+
+  getItemPriceXpath(itemName) {
+    return `//div[@class="inventory_item" and .//button[@data-test="add-to-cart-${itemName.toLowerCase().replace(/ /g, '-')}"]]//div[@class="inventory_item_price"]`;
+}
+//div[@class="inventory_item" and .//button[@data-test="add-to-cart-sauce-labs-backpack"]]//div[@class="inventory_item_price"]
+
+  async getPriceByName(itemName) {
+    const xpath = this.getItemPriceXpath(itemName);
+    const priceElement = await $(xpath);
+    
+    return await priceElement.getText();
+}
 }
 
 module.exports = new InventoryPage();

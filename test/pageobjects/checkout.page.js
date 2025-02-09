@@ -39,15 +39,10 @@ class CheckoutPage {
     return $(".checkout_info");
   } 
 
-  async verifyProductInOverview(productName) {
-    const cartItemText = await (await $('.cart_item .inventory_item_name')).getText();
+  async verifyProductInCheckout(productName) {
+    const cartItemText = await $('.cart_item .inventory_item_name').getText();
     if (cartItemText !== productName) {
         throw new Error(`Expected "${productName}", found "${cartItemText}"`);
-    }
-
-    const overviewItemText = await (await $('.cart_item .inventory_item_name')).getText();
-    if (overviewItemText !== productName) {
-        throw new Error(`Expected "${productName}" in Overview, found "${overviewItemText}"`);
     }
 }
 
@@ -60,7 +55,7 @@ async getTotalPriceFromOverview() {
       total += parseFloat(priceText.replace("$", "").trim());
   }
 
-  return total;
+  return String(total);
 }
 
   async fillCheckoutForm(

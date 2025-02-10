@@ -39,6 +39,19 @@ class InventoryPage extends Page {
     const dropdown = $('[data-test="product-sort-container"]');
     return dropdown;
   }
+  
+  async getAllProductNames() {
+    const products = await this.inventoryItems;
+    const productNames = [];
+  
+    for (const product of products) {
+      const nameElement = await product.$(".inventory_item_name");
+      const name = await nameElement.getText();
+      productNames.push(name);
+    }
+  
+    return productNames;
+  }
 
   async selectSortOption(option) {
     await this.sortDropdown.waitForDisplayed();

@@ -1,55 +1,49 @@
 //006
+const loginPage = require("../pageobjects/login.page");
 const inventoryPage = require("../pageobjects/inventory.page");
 
 describe("Product sorting test", () => {
-  const sortOptions = [
-    "Name (A to Z)",
-    "Name (Z to A)",
-    "Price (low to high)",
-    "Price (high to low)",
-  ];
+  before(async () => {
+    await loginPage.open();
+    await loginPage.login();
+    await expect(await browser.getUrl()).toContain("/inventory.html");
+  });
 
-  sortOptions.forEach((option) => {
-    it(`should correctly sort products based on "${option}"`, async () => {
-      const inventoryItems = await $$('[data-test="inventory-item"]');
-      if (inventoryItems.length === 0) {
-        console.log("No inventory items found!");
-        return;
-      }
+  const validateNameSort = async (sortOption, sortFn) => {
+    await inventoryPage.sortProducts(sortOption);
+    const products = await inventoryPage.getAllProductNames();
+    const sortedProducts = sortFn(products);
+    expect(products).toEqual(sortedProducts);
+  };
 
-      await inventoryPage.sortProducts(option);
+  const validatePriceSort = async (sortOption, sortFn) => {
+    await inventoryPage.sortProducts(sortOption);
+    const products = await inventoryPage.getAllProductNames();
+    const prices = await Promise.all(
+      products.map((product) => inventoryPage.getPriceByName(product))
+    );
+    const numericPrices = prices.map((price) => parseFloat(price.replace("$", "")));
+    const sortedPrices = sortFn(numericPrices);
+    expect(numericPrices).toEqual(sortedPrices);
+  };
 
-      await inventoryItems[0].waitForDisplayed({ timeout: 5000 });
+  it("should correctly sort products based on 'Name (A to Z)'", async () => {
+    await validateNameSort("Name (A to Z)", (products) => [...products].sort());
+  });
 
-      if (option.includes("Price")) {
-        const priceElements = await $$('[data-test="inventory-item-price"]');
-        const priceValues = await Promise.all(
-          priceElements.map((el) =>
-            el
-              .getText()
-              .then((text) => parseFloat(text.replace("$", "").trim()))
-          )
-        );
+  it("should correctly sort products based on 'Name (Z to A)'", async () => {
+    await validateNameSort("Name (Z to A)", (products) => [...products].sort().reverse());
+  });
 
-        const sortedPrices = [...priceValues].sort((a, b) =>
-          option.includes("low to high") ? a - b : b - a
-        );
-        expect(priceValues).toEqual(sortedPrices);
-      } else {
-        const productNameElements = await $$(
-          '[data-test="inventory-item-name"]'
-        );
-        const productNames = await Promise.all(
-          productNameElements.map((el) => el.getText())
-        );
-
-        const sortedNames = [...productNames].sort();
-        if (option.includes("Z to A")) {
-          sortedNames.reverse();
-        }
-
-        expect(productNames).toEqual(sortedNames);
-      }
-    });
+  it("should correctly sort products based on 'Price (low to high)'", async () => {
+    await validatePriceSort("Price (low to high)", (prices) =>
+      [...prices].sort((a, b) => a - b)
+    );
+  });
+  
+  it("should correctly sort products based on 'Price (high to low)'", async () => {
+    await validatePriceSort("Price (high to low)", (prices) =>
+      [...prices].sort((a, b) => b - a)
+    );
   });
 });
